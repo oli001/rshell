@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -12,10 +13,11 @@ vector<string> tokenize(string x); //prototype to tokenize the commands
 int main()
 {
     string command;     //string to hold the user command
+    string run; //string to run in the shell
 
     cout << "$ ";       //prompt the user
     getline(cin, command);      //takes the entire line of prompts
-    vector<string> tokens = tokenize(command); //calls the tokenize function 
+    vector<string> tokens = tokenize(command); //calls the tokenize function
     return 0;
 }
 
