@@ -17,11 +17,12 @@ int main()
     cout << "$ ";       //prompt the user
     getline(cin, command);      //takes the entire line of prompts
     vector<string> inter = tokenize(command); //calls the tokenize function
-    //vector<char*> tokens;
-    //for(auto it = inter.being(); it != inter.end(); ++it)
-    //{
-        //tokens.push_back(it->c_str());   
-    //}
+    vector<const char*> tokens;
+    for(auto it = inter.begin(); it != inter.end(); ++it)
+    {
+        tokens.push_back(it->c_str());   
+    }
+    tokens.push_back('\0');
     return 0;
 }
 
