@@ -2,7 +2,7 @@ Owen Li
 
 RShell
 
-	This program allows the user to input shell commands while the program 
+This program allows the user to input shell commands while the program 
 is running and runs it the commands through the terminal.
 
 Known bugs:
