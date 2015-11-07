@@ -18,21 +18,22 @@ char *stringToCstring(string z); //converts a string to a cstring
 
 int main()
 {
-    string command;     //string to hold the user command
+    string commander;     //string to hold the user command
  
     bool restart = true; //keep looping until user enters exit
     while(restart)
     {
         cout << "$ ";       //prompt the user
-        getline(cin, command);      //takes the entire line of prompts
-        vector<string> inter = tokenize(command); //calls the tokenize function
+        getline(cin, commander);      //takes the entire line of prompts
+        vector<string> inter = tokenize(commander); //calls the tokenize function
 	inter.push_back("\0");
 
         vector<char*> tokens;
         char* cmd;
-        for(auto it = inter.begin(); it != inter.end(); ++it) //strings to char*
+        for(unsigned it = 0; it < inter.size(); it++) 
+	//strings to char*
         {
-            cmd = stringToCstring(*it);    
+            cmd = stringToCstring(inter.at(it));    
             tokens.push_back(cmd);   
         }
 	char **command = &tokens[0];
@@ -102,7 +103,7 @@ int main()
 	    {
 		command[counter] = new char[inter[i].size() + 1];
 		copy(inter[i].begin(), inter[i].end(), command[counter]);
-                command[counter][inter[i].size()] = NULL;
+                command[counter][inter[i].size()] = '\0';
 		counter++;
 	    }
         }
@@ -113,12 +114,118 @@ int main()
 vector<string> tokenize(string x)
 {
     vector<string> tokenVector;
-    split(tokenVector, x, is_any_of(" "), token_compress_on); 
-    //searches for spaces
-    return tokenVector;
+    split(tokenVector, x, is_any_of(" "), token_compress_on);
+    // seprates by spaces
+
+    vector<string> tokenVectorAnd;
+    string delimiter = "&&";
+    size_t pos = 0;
+    string oldString;
+    string newString;
+    for(unsigned i = 0; i < tokenVector.size(); i++)
+    {
+        oldString = tokenVector.at(i);
+	if((pos = oldString.find(delimiter)) != string::npos
+	    && oldString != delimiter)
+	{ 
+            while ((pos = oldString.find(delimiter)) != string::npos) 
+            {
+	        newString = oldString.substr(0, pos);
+	        tokenVectorAnd.push_back(newString);
+		tokenVectorAnd.push_back(delimiter);
+	        oldString.erase(0, pos + delimiter.length());
+            }
+	    tokenVectorAnd.push_back(oldString);
+	}
+
+	else
+	{
+	    tokenVectorAnd.push_back(oldString);
+	}
+    }
+    //separates by &&
+
+    vector<string> tokenVectorOr;
+    delimiter = "||";
+    pos = 0;
+    for(unsigned j = 0; j < tokenVectorAnd.size(); j++)
+    {
+        oldString = tokenVectorAnd.at(j);
+	if((pos = oldString.find(delimiter)) != string::npos
+	    && oldString != delimiter)
+	{ 
+            while ((pos = oldString.find(delimiter)) != string::npos) 
+            {
+	        newString = oldString.substr(0, pos);
+	        tokenVectorOr.push_back(newString);
+		tokenVectorOr.push_back(delimiter);
+	        oldString.erase(0, pos + delimiter.length());
+            }
+	    tokenVectorOr.push_back(oldString);
+	}
+
+	else
+	{
+	    tokenVectorOr.push_back(oldString);
+	}
+    }
+    //separates by ||
+
+    vector<string> tokenVectorHash;
+    delimiter = "#";
+    pos = 0;
+    for(unsigned k = 0; k < tokenVectorOr.size(); k++)
+    {
+        oldString = tokenVectorOr.at(k);
+	if((pos = oldString.find(delimiter)) != string::npos
+	    && oldString != delimiter)
+	{ 
+            while ((pos = oldString.find(delimiter)) != string::npos) 
+            {
+	        newString = oldString.substr(0, pos);
+	        tokenVectorHash.push_back(newString);
+		tokenVectorHash.push_back(delimiter);
+	        oldString.erase(0, pos + delimiter.length());
+            }
+	    tokenVectorHash.push_back(oldString);
+	}
+
+	else
+	{
+	    tokenVectorHash.push_back(oldString);
+	}
+    }
+    //separates by #
+ 
+    vector<string> tokenVectorFinal;
+    delimiter = ";";
+    pos = 0;
+    for(unsigned l = 0; l < tokenVectorHash.size(); l++)
+    {
+        oldString = tokenVectorHash.at(l);
+	if((pos = oldString.find(delimiter)) != string::npos
+	    && oldString != delimiter)
+	{ 
+            while ((pos = oldString.find(delimiter)) != string::npos) 
+            {
+	        newString = oldString.substr(0, pos);
+	        tokenVectorFinal.push_back(newString);
+		tokenVectorFinal.push_back(delimiter);
+	        oldString.erase(0, pos + delimiter.length());
+            }
+	    tokenVectorFinal.push_back(oldString);
+	}
+
+	else
+	{
+	    tokenVectorFinal.push_back(oldString);
+	}
+    }
+    //separates by ; 
+    return tokenVectorFinal;
 }
 
-char *stringToCstring(string z)
+char *stringToCstring(string z) //makes a char* from a string
 {
     char *cstr = new char[z.length() + 1];
     strcpy(cstr, z.c_str());
