@@ -7,4 +7,5 @@ is running and runs it the commands through the terminal.
 
 Known bugs:
 	- trouble when using quotation marks in an echo command
+	- can't seem to use shell script to exit
 
