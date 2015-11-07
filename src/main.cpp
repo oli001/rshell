@@ -25,7 +25,8 @@ int main()
     {
         cout << "$ ";       //prompt the user
         getline(cin, commander);      //takes the entire line of prompts
-        vector<string> inter = tokenize(commander); //calls the tokenize function
+        vector<string> inter = tokenize(commander); 
+	//calls the tokenize function
 	inter.push_back("\0");
 
         vector<char*> tokens;
