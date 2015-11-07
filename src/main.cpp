@@ -97,6 +97,7 @@ int main()
             else if(inter.at(i) == "exit") //user wants to exit
             {
                 exit(1);
+		return 0;
         	break;   
             }
 		
