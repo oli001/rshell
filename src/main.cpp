@@ -14,6 +14,8 @@ using namespace std;
 using namespace boost;
 
 vector<string> tokenize(string x); //prototype to tokenize the commands
+vector<string> separateByDelim(vector<string> origVector, string delimiter);
+//function used to separate strings in a vector by a delimiter
 char *stringToCstring(string z); //converts a string to a cstring  
 
 int main()
@@ -117,94 +119,32 @@ vector<string> tokenize(string x)
 {
     vector<string> tokenVector;
     split(tokenVector, x, is_any_of(" "), token_compress_on);
-    // seprates by spaces
+    // separates by spaces
 
-    vector<string> tokenVectorAnd;
-    string delimiter = "&&";
-    size_t pos = 0;
+    vector<string> tokenVectorDelim = separateByDelim(tokenVector, "&&");
+    // separates by &&
+    tokenVectorDelim = separateByDelim(tokenVectorDelim, "||");
+    //separates by ||
+    tokenVectorDelim = separateByDelim(tokenVectorDelim, "#");
+    //separates by #
+    tokenVectorDelim = separateByDelim(tokenVectorDelim, "[");
+    //separates by [
+    tokenVectorDelim = separateByDelim(tokenVectorDelim, "]");
+    //separates by ]
+    tokenVectorDelim = separateByDelim(tokenVectorDelim, ";");
+    //separates by ;
+    return tokenVectorDelim;
+}
+
+vector<string> separateByDelim(vector<string> origVector, string delimiter)
+{
+    vector<string> tokenVectorFinal;
+    int pos = 0;
     string oldString;
     string newString;
-    for(unsigned i = 0; i < tokenVector.size(); i++)
+    for(unsigned l = 0; l < origVector.size(); l++)
     {
-        oldString = tokenVector.at(i);
-	if((pos = oldString.find(delimiter)) != string::npos
-	    && oldString != delimiter)
-	{ 
-            while ((pos = oldString.find(delimiter)) != string::npos) 
-            {
-	        newString = oldString.substr(0, pos);
-	        tokenVectorAnd.push_back(newString);
-		tokenVectorAnd.push_back(delimiter);
-	        oldString.erase(0, pos + delimiter.length());
-            }
-	    tokenVectorAnd.push_back(oldString);
-	}
-
-	else
-	{
-	    tokenVectorAnd.push_back(oldString);
-	}
-    }
-    //separates by &&
-
-    vector<string> tokenVectorOr;
-    delimiter = "||";
-    pos = 0;
-    for(unsigned j = 0; j < tokenVectorAnd.size(); j++)
-    {
-        oldString = tokenVectorAnd.at(j);
-	if((pos = oldString.find(delimiter)) != string::npos
-	    && oldString != delimiter)
-	{ 
-            while ((pos = oldString.find(delimiter)) != string::npos) 
-            {
-	        newString = oldString.substr(0, pos);
-	        tokenVectorOr.push_back(newString);
-		tokenVectorOr.push_back(delimiter);
-	        oldString.erase(0, pos + delimiter.length());
-            }
-	    tokenVectorOr.push_back(oldString);
-	}
-
-	else
-	{
-	    tokenVectorOr.push_back(oldString);
-	}
-    }
-    //separates by ||
-
-    vector<string> tokenVectorHash;
-    delimiter = "#";
-    pos = 0;
-    for(unsigned k = 0; k < tokenVectorOr.size(); k++)
-    {
-        oldString = tokenVectorOr.at(k);
-	if((pos = oldString.find(delimiter)) != string::npos
-	    && oldString != delimiter)
-	{ 
-            while ((pos = oldString.find(delimiter)) != string::npos) 
-            {
-	        newString = oldString.substr(0, pos);
-	        tokenVectorHash.push_back(newString);
-		tokenVectorHash.push_back(delimiter);
-	        oldString.erase(0, pos + delimiter.length());
-            }
-	    tokenVectorHash.push_back(oldString);
-	}
-
-	else
-	{
-	    tokenVectorHash.push_back(oldString);
-	}
-    }
-    //separates by #
- 
-    vector<string> tokenVectorFinal;
-    delimiter = ";";
-    pos = 0;
-    for(unsigned l = 0; l < tokenVectorHash.size(); l++)
-    {
-        oldString = tokenVectorHash.at(l);
+        oldString = origVector.at(l);
 	if((pos = oldString.find(delimiter)) != string::npos
 	    && oldString != delimiter)
 	{ 
@@ -223,7 +163,6 @@ vector<string> tokenize(string x)
 	    tokenVectorFinal.push_back(oldString);
 	}
     }
-    //separates by ; 
     return tokenVectorFinal;
 }
 
