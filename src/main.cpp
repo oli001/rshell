@@ -236,7 +236,7 @@ vector<string> tokenize(string x)
 vector<string> separateByDelim(vector<string> origVector, string delimiter)
 {
     vector<string> tokenVectorFinal;
-    int pos = 0;
+    unsigned pos = 0;
     string oldString;
     string newString;
     for(unsigned l = 0; l < origVector.size(); l++)
